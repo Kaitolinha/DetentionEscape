@@ -1,0 +1,145 @@
+[gd_scene load_steps=3 format=3 uid="uid://5squtt5rr0yu"]
+
+[ext_resource type="Script" path="res://src/interfaces/interface.gd" id="1_mih5b"]
+[ext_resource type="PackedScene" uid="uid://b2bf0kvvde68e" path="res://src/sides/side_front.tscn" id="2_ableb"]
+
+[node name="Interface" type="CanvasLayer" node_paths=PackedStringArray("_side_spawn", "_left_arrow", "_right_arrow", "_info_messages", "_slot_messages", "_slots")]
+script = ExtResource("1_mih5b")
+_side_spawn = NodePath("Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel/SubViewportContainer/SubViewport")
+_left_arrow = NodePath("Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel/LeftArrow")
+_right_arrow = NodePath("Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel/RightArrow")
+_info_messages = NodePath("Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel/MarginContainer/InfoMessages")
+_slot_messages = NodePath("Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel/MarginContainer/SlotMessages")
+_slots = NodePath("Control2/AspectRatioContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer")
+metadata/_edit_vertical_guides_ = [20.0, 1201.0, 1120.0]
+metadata/_edit_horizontal_guides_ = [26.0, 693.0]
+
+[node name="Control2" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Background" type="ColorRect" parent="Control2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Control2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+ratio = 1.808
+
+[node name="MarginContainer" type="MarginContainer" parent="Control2/AspectRatioContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control2/AspectRatioContainer/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Panel" type="Control" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 8.14
+mouse_filter = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -550.0
+offset_top = -333.5
+offset_right = 729.0
+offset_bottom = 442.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.86, 0.86)
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1279, 776)
+render_target_update_mode = 4
+
+[node name="SideFront" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel/SubViewportContainer/SubViewport" instance=ExtResource("2_ableb")]
+
+[node name="LeftArrow" type="Button" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 20.0
+offset_top = -16.0
+offset_right = 52.0
+offset_bottom = 16.0
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="RightArrow" type="Button" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -52.0
+offset_top = -16.0
+offset_right = -20.0
+offset_bottom = 16.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 40
+
+[node name="SlotMessages" type="VBoxContainer" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="InfoMessages" type="VBoxContainer" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer/Panel/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control2/AspectRatioContainer/MarginContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+alignment = 1

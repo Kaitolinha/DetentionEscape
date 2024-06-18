@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://q3ttt6agf7p5"]
+
+[node name="SideRight" type="Node2D"]
+
+[node name="Lixo" type="ColorRect" parent="."]
+offset_left = 704.0
+offset_top = 544.0
+offset_right = 768.0
+offset_bottom = 643.0
+color = Color(0, 0, 0, 1)
+
+[node name="Balança" type="ColorRect" parent="."]
+offset_left = 128.0
+offset_top = 384.0
+offset_right = 224.0
+offset_bottom = 483.0
+color = Color(0, 0, 0, 1)
+
+[node name="Computador" type="ColorRect" parent="."]
+offset_left = 288.0
+offset_top = 352.0
+offset_right = 448.0
+offset_bottom = 448.0
+color = Color(0, 0, 0, 1)
+
+[node name="Cartaz" type="ColorRect" parent="."]
+offset_left = 576.0
+offset_top = 128.0
+offset_right = 800.0
+offset_bottom = 288.0
+color = Color(0, 0, 0, 1)
+
+[node name="Armário" type="ColorRect" parent="."]
+offset_left = 96.0
+offset_top = 483.0
+offset_right = 512.0
+offset_bottom = 640.0
+color = Color(0, 0, 1, 1)
