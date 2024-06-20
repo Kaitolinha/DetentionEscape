@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://cx1gospj35i"]
+
+[ext_resource type="Script" path="res://src/core/game.gd" id="1_cchd5"]
+[ext_resource type="PackedScene" uid="uid://5squtt5rr0yu" path="res://src/interfaces/interface.tscn" id="2_0awby"]
+[ext_resource type="PackedScene" uid="uid://cc8ekl0tbjobm" path="res://src/core/message.tscn" id="2_lj0g8"]
+[ext_resource type="PackedScene" uid="uid://beudyhrxjqoo0" path="res://src/core/inventory.tscn" id="2_vxly3"]
+
+[node name="Game" type="Node2D" node_paths=PackedStringArray("message", "inventory")]
+script = ExtResource("1_cchd5")
+message = NodePath("Message")
+inventory = NodePath("Inventory")
+
+[node name="Message" parent="." instance=ExtResource("2_lj0g8")]
+
+[node name="Inventory" parent="." instance=ExtResource("2_vxly3")]
+
+[node name="Interface" parent="." instance=ExtResource("2_0awby")]

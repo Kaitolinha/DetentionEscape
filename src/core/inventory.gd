@@ -1,8 +1,9 @@
+class_name Inventory
 extends Node
 
 signal refreshed(index: int)
 
-var capacity: int = 6
+@export var capacity: int = 5
 var _data: Array[Item]
 
 func _ready() -> void:

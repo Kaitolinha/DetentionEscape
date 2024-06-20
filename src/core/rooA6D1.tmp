@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://cx1gospj35i"]
+
+[ext_resource type="Script" path="res://src/core/room.gd" id="1_7mha0"]
+[ext_resource type="PackedScene" uid="uid://5squtt5rr0yu" path="res://src/interfaces/interface.tscn" id="2_0awby"]
+[ext_resource type="PackedScene" uid="uid://beudyhrxjqoo0" path="res://src/core/inventory.tscn" id="2_vxly3"]
+
+[node name="Room" type="Node2D"]
+script = ExtResource("1_7mha0")
+
+[node name="Inventory" parent="." instance=ExtResource("2_vxly3")]
+
+[node name="Interface" parent="." node_paths=PackedStringArray("_room", "_inventory") instance=ExtResource("2_0awby")]
+_room = NodePath("..")
+_inventory = NodePath("../Inventory")

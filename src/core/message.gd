@@ -1,3 +1,4 @@
+class_name Message
 extends Node
 
 signal info_sent(message: StringName)

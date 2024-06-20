@@ -7,4 +7,4 @@ func _ready() -> void:
 		for child in get_children():
 			if child is Interact:
 				child.interact()
-		Message.send(Message.MessageType.INFO, message))
+		Global.game.message.send(Message.MessageType.INFO, message))

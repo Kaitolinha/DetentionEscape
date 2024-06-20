@@ -11,16 +11,14 @@ config_version=5
 [application]
 
 config/name="Eco Escape"
-run/main_scene="res://src/room.tscn"
+run/main_scene="res://src/core/game.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Room="*res://src/room.gd"
-Message="*res://src/core/message.gd"
-Inventory="*res://src/core/inventory.gd"
-Registers="*res://src/core/registers.gd"
+Saver="*res://src/saver.gd"
+Global="*res://src/global.gd"
 
 [display]
 
