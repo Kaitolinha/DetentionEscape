@@ -1,29 +1,25 @@
-[gd_scene load_steps=8 format=3 uid="uid://b2bf0kvvde68e"]
+[gd_scene load_steps=5 format=3 uid="uid://b2bf0kvvde68e"]
 
 [ext_resource type="Script" path="res://src/sides/front_side.gd" id="1_8spov"]
 [ext_resource type="PackedScene" uid="uid://bykd3kd6ewibc" path="res://src/interacts/interactable.tscn" id="2_q8d67"]
 [ext_resource type="PackedScene" uid="uid://dwmohiwpgit5p" path="res://src/interacts/interact_item.tscn" id="3_4ab2k"]
 [ext_resource type="Resource" uid="uid://dof4mf6ctkx6p" path="res://src/items/key.tres" id="4_d10jh"]
-[ext_resource type="Script" path="res://src/items/item.gd" id="5_eq8k2"]
-[ext_resource type="Texture2D" uid="uid://ka2qhlnrtnoe" path="res://icon.svg" id="6_4ygqs"]
 
-[sub_resource type="Resource" id="Resource_7f4nv"]
-script = ExtResource("5_eq8k2")
-title = "USB"
-texture = ExtResource("6_4ygqs")
-
-[node name="FrontSide" type="Node2D"]
+[node name="FrontSide" type="Node2D" groups=["Objects"]]
 script = ExtResource("1_8spov")
+metadata/_edit_horizontal_guides_ = [240.0, 480.0, 780.0]
+metadata/_edit_vertical_guides_ = [420.0, 840.0]
 
-[node name="Background" type="ColorRect" parent="."]
-offset_right = 1280.0
+[node name="Background2" type="ColorRect" parent="."]
+offset_left = 60.0
+offset_right = 1220.0
 offset_bottom = 720.0
-color = Color(0.631035, 0.631035, 0.631035, 1)
+color = Color(0.631373, 0.631373, 0.631373, 1)
 
 [node name="Porta" type="ColorRect" parent="."]
-offset_left = 220.0
+offset_left = 300.0
 offset_top = 240.0
-offset_right = 476.0
+offset_right = 540.0
 offset_bottom = 720.0
 color = Color(0, 0, 0, 1)
 
@@ -33,31 +29,3 @@ message = "A porta está trancada."
 
 [node name="InteractItem" parent="Porta/Interactable" instance=ExtResource("3_4ab2k")]
 item = ExtResource("4_d10jh")
-
-[node name="Lupa" type="ColorRect" parent="."]
-offset_left = 796.0
-offset_top = 560.0
-offset_right = 828.0
-offset_bottom = 595.0
-color = Color(0, 0, 0, 1)
-
-[node name="Computador" type="ColorRect" parent="."]
-offset_left = 860.0
-offset_top = 528.0
-offset_right = 988.0
-offset_bottom = 592.0
-color = Color(0, 0, 0, 1)
-
-[node name="Interactable" parent="Computador" instance=ExtResource("2_q8d67")]
-layout_mode = 1
-message = "O cumpatador está quebrado."
-
-[node name="InteractItem" parent="Computador/Interactable" instance=ExtResource("3_4ab2k")]
-item = SubResource("Resource_7f4nv")
-
-[node name="Documentos" type="ColorRect" parent="."]
-offset_left = 764.0
-offset_top = 592.0
-offset_right = 1052.0
-offset_bottom = 720.0
-color = Color(0, 0, 0, 1)

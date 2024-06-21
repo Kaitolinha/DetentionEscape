@@ -1,70 +1,50 @@
 shader_type canvas_item;
 
-uniform vec2 up_left = vec2(0.0);
-uniform vec2 up_right = vec2(1.0, 0.0);
-uniform vec2 down_right = vec2(1.0, 1.0);
-uniform vec2 down_left = vec2(0.0, 1.0);
+uniform float fov : hint_range(1, 179) = 90;
+uniform float y_rot : hint_range(-180, 180) = 0.0;
+uniform float x_rot : hint_range(-180, 180) = 0.0;
+uniform float inset : hint_range(0, 1) = 0.0;
 
-uniform vec2 plane_size;
+uniform vec2 rotation_pivot = vec2(0.5);
+varying mat3 rotmat;
+varying float tang;
 
-varying mat3 trans_inv;
-varying vec2 trans_scale;
-varying vec2 trans_offset;
+void vertex(){
+	float sin_b = sin(y_rot / 180.0 * PI);
+	float cos_b = cos(y_rot / 180.0 * PI);
+	float sin_c = sin(x_rot / 180.0 * PI);
+	float cos_c = cos(x_rot / 180.0 * PI);
 
-mat3 perspective_transform(vec2[4] poly) { 
-	float dx1 = poly[1].x - poly[2].x;
-	float dx2 = poly[3].x - poly[2].x;
-	float dx3 = poly[0].x - poly[1].x + poly[2].x - poly[3].x;
-	float dy1 = poly[1].y - poly[2].y;
-	float dy2 = poly[3].y - poly[2].y;
-	float dy3 = poly[0].y - poly[1].y + poly[2].y - poly[3].y;
- 
-	float a13 = (dx3 * dy2 - dy3 * dx2) / (dx1 * dy2 - dy1 * dx2);
-	float a23 = (dx1 * dy3 - dy1 * dx3) / (dx1 * dy2 - dy1 * dx2);
-	float a11 = poly[1].x - poly[0].x + a13 * poly[1].x;
-	float a21 = poly[3].x - poly[0].x + a23 * poly[3].x;
-	float a31 = poly[0].x;
-	float a12 = poly[1].y - poly[0].y + a13 * poly[1].y;
-	float a22 = poly[3].y - poly[0].y + a23 * poly[3].y;
-	float a32 = poly[0].y;
- 
-	mat3 transform_mat = mat3(
-		vec3(a11, a12, a13),
-		vec3(a21, a22, a23),
-		vec3(a31, a32, 1)
-	);
-	
-	return inverse(transform_mat);
+	rotmat[0][0] = cos_b;
+	rotmat[0][1] = sin_b * sin_c;
+	rotmat[0][2] = sin_b * cos_c;
+
+	rotmat[1][0] = 0.0;
+	rotmat[1][1] = cos_c;
+	rotmat[1][2] = -sin_c;
+
+	rotmat[2][0] = -sin_b;
+	rotmat[2][1] = cos_b * sin_c;
+	rotmat[2][2] = cos_b * cos_c;
+	tang = tan(fov / 360.0 * PI);
+	VERTEX += (UV - 0.5) / TEXTURE_PIXEL_SIZE * tang * (1.0 - inset) * 2.0;
+
+	tang = 0.5 / tang;
 }
 
-vec2 mult_mat_inv_point(mat3 mat_inv, vec2 point) {
-	vec3 result = mat_inv * vec3(point, 1.0);
-	return vec2(result.x / result.z, result.y / result.z);
-}
+void fragment(){
+	vec3 p = vec3(UV - 0.5, tang);
+	vec3 plane_offset = vec3(vec2(0.5) - rotation_pivot, tang + 1.);
+	vec3 plane_normal = rotmat[2];
 
-void vertex() {
-	vec2[] poly = {up_left, up_right, down_right, down_left};
-	//PRECALCULATING TRANSFORMATION MATRIX
-	trans_inv = perspective_transform(poly);
-	//SCALE AND OFFSET TO TRANSFORM VERTEX AND LATER UV TO SUPPORT OUT OF BOUNDING BOX TRANSFORMATION
-	trans_scale = vec2(
-		max(max(up_right.x, down_right.x) - min(up_left.x, down_left.x), 1.0),
-		max(max(down_left.y, down_right.y) - min(up_left.y, up_right.y), 1.0)
-	);
-	trans_offset = vec2(
-		min(min(up_left.x, down_left.x), 0.0),
-		min(min(up_left.y, up_right.y), 0.0)
-	);
-	VERTEX = VERTEX * trans_scale + plane_size * trans_offset;
-}
+	float dot_prod = dot(plane_normal, p);
+	if (dot_prod <= 0.0) discard;
 
-void fragment() {
-	vec2 pUV = mult_mat_inv_point(trans_inv, UV * trans_scale + trans_offset);
-	//CUTTING OUT OF BOUNDS TEXTURE OFF. FEEL FREE TO REMOVE IF NOT NEEDED
-	if (pUV.x > 1.0 || pUV.y > 1.0 || pUV.x < 0.0 || pUV.y < 0.0) {
-		COLOR = vec4(0.0);
-	} else {
-		vec4 point = texture(TEXTURE, pUV);
-		COLOR = point;
-	}
+	float fac = dot(plane_normal, plane_offset) / dot_prod;
+	vec2 uv = (inverse(rotmat) * (p * fac - plane_offset)).xy;
+
+	uv += vec2(0.5) - rotation_pivot;
+	if (any(greaterThan(abs(uv), vec2(0.5)))) discard;
+
+	COLOR = texture(TEXTURE, uv + 0.5);
 }

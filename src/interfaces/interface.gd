@@ -27,7 +27,7 @@ func _ready():
 
 	_spawn.add_child(room)
 
-	# Information messages.
+	# Information messages. 
 	Global.game.message.info_sent.connect(func(message: StringName) -> void:
 		var label := Label.new()
 		label.text = message
