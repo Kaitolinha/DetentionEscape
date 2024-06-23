@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cc8ekl0tbjobm"]
-
-[ext_resource type="Script" path="res://src/core/message.gd" id="1_wab5f"]
-
-[node name="Message" type="Node"]
-script = ExtResource("1_wab5f")

@@ -4,11 +4,13 @@ extends Node
 signal info_sent(message: StringName)
 signal slot_sent(message: StringName)
 
-enum MessageType {INFO, SLOT}
+enum MessageIn {LEFT, RIGHT}
 
-func send(type: MessageType, message: StringName) -> void:
-	match type:
-		MessageType.INFO:
+func send(localization: MessageIn, message: StringName) -> void:
+	if message.is_empty(): return
+
+	match localization:
+		MessageIn.LEFT:
 			info_sent.emit(message)
-		MessageType.SLOT:
+		MessageIn.RIGHT:
 			slot_sent.emit(message)

@@ -1,43 +1,44 @@
-[gd_scene load_steps=2 format=3 uid="uid://bqhsfruxlefrp"]
+[gd_scene load_steps=3 format=3 uid="uid://cggr0g5fkfeat"]
 
 [ext_resource type="Script" path="res://src/interfaces/slot.gd" id="1_3wc6c"]
 
-[node name="Slot" type="Control" node_paths=PackedStringArray("_background", "_image", "_button")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1w0gn"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="Slot" type="Control" node_paths=PackedStringArray("_image", "_button", "_background")]
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 91.0
-offset_bottom = 96.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 4
+mouse_filter = 1
 script = ExtResource("1_3wc6c")
-_background = NodePath("Button/Background")
-_image = NodePath("Button/MarginContainer/ItemImage")
+_image = NodePath("Button/MarginContainer/Item")
 _button = NodePath("Button")
+_background = NodePath("Button/Background")
 
 [node name="Button" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -45.5
-offset_top = -48.0
-offset_right = 109.5
-offset_bottom = 89.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.620853, 0.699531)
-size_flags_vertical = 3
-flat = true
-
-[node name="Background" type="ColorRect" parent="Button"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_vertical = 4
+mouse_filter = 1
+
+[node name="Background" type="Panel" parent="Button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1w0gn")
 
 [node name="MarginContainer" type="MarginContainer" parent="Button"]
 layout_mode = 1
@@ -46,12 +47,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="ItemImage" type="TextureRect" parent="Button/MarginContainer"]
+[node name="Item" type="TextureRect" parent="Button/MarginContainer"]
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5

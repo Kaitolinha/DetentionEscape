@@ -4,13 +4,13 @@ extends CanvasLayer
 @export var _spawn: Node
 @export var _left_arrow: Button
 @export var _right_arrow: Button
-@export var _down_arrow: Button
 @export var _up_arrow: Button
-@export var _info_messages: VBoxContainer
-@export var _slot_messages: VBoxContainer
-@export var _slots: VBoxContainer
+@export var _down_arrow: Button
+@export var _left_messages: VBoxContainer
+@export var _right_messages: VBoxContainer
+@export var slots: VBoxContainer
 
-var slot_focus: Slot
+var slot_focused: Slot
 
 func _ready():
 	var room: Room = preload("res://src/core/room.tscn").instantiate()
@@ -32,9 +32,9 @@ func _ready():
 		var label := Label.new()
 		label.text = message
 
-		_info_messages.add_child(label)
+		_left_messages.add_child(label)
 		await get_tree().create_timer(2).timeout
-		_info_messages.remove_child(label))
+		_left_messages.remove_child(label))
 
 	# Slot messages.
 	Global.game.message.slot_sent.connect(func(message: StringName) -> void:
@@ -42,20 +42,40 @@ func _ready():
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		label.text = message
 
-		_slot_messages.add_child(label)
+		_right_messages.add_child(label)
 		await get_tree().create_timer(2).timeout
-		_slot_messages.remove_child(label))
+		_right_messages.remove_child(label))
 
 	# Inventory.
-	assert(_slots.get_child_count() == 0, "The slots container must be empty.")
-	for index in range(Global.game.inventory.capacity):
-		var slot = preload("res://src/interfaces/slot.tscn").instantiate()
+	assert(slots.get_child_count() == 0, "The slots container must be empty.")
+
+	var create = func(scene: PackedScene) -> void:
+		var slot = scene.instantiate()
 		slot.interface = self
-		slot.index = index
 		slot.focus(false)
-		_slots.add_child(slot)
+		slots.add_child(slot)
+
+	var slot_scene = preload("res://src/interfaces/slot.tscn")
+	for index in Global.game.inventory.size():
+		create.call(slot_scene)
 
 	Global.game.inventory.refreshed.connect(func(index: int) -> void:
-		assert(_slots.get_child_count() == Global.game.inventory.capacity,
-			"The slots container must have %d children." % Global.game.inventory.capacity)
-		_slots.get_child(index).refresh())
+		assert(slots.get_child_count() == Global.game.inventory.size(),
+			"The slots container must have %d children." % Global.game.inventory.size())
+		slots.get_child(index).refresh())
+
+	Global.game.inventory.removed.connect(func(index: int) -> void:
+		slots.get_child(index).queue_free())
+
+	Global.game.inventory.focused.connect(func(index: int, enable: bool) -> void:
+		var item: Item = Global.game.inventory.get_item(index)
+		if is_instance_valid(item) and enable:
+			Global.game.message.send(Message.MessageIn.RIGHT, item.title)
+		slots.get_child(index).focus(enable))
+
+	Global.game.inventory.inserted.connect(func(index: int) -> void:
+		var item: Item = Global.game.inventory.get_item(index)
+		if is_instance_valid(item):
+			Global.game.message.send(Message.MessageIn.RIGHT, item.title)
+		if index == slots.get_child_count():
+			create.call(slot_scene))

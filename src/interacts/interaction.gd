@@ -1,4 +1,4 @@
-class_name Interact
+class_name Interaction
 extends Node
 
 func interact() -> void:

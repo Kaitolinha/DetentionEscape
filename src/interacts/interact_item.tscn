@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dwmohiwpgit5p"]
-
-[ext_resource type="Script" path="res://src/interacts/interact_item.gd" id="1_jtc50"]
-
-[node name="InteractItem" type="Node"]
-script = ExtResource("1_jtc50")
