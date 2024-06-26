@@ -1,26 +1,35 @@
 [gd_scene load_steps=2 format=3 uid="uid://q3ttt6agf7p5"]
 
-[ext_resource type="Script" path="res://src/sides/right_side.gd" id="1_m4heu"]
+[ext_resource type="Script" path="res://src/sides/side.gd" id="1_25jxc"]
 
 [node name="RightSide" type="Node2D"]
-script = ExtResource("1_m4heu")
+script = ExtResource("1_25jxc")
+metadata/_edit_vertical_guides_ = [840.0, 440.0]
+metadata/_edit_horizontal_guides_ = [240.0, 480.0, 780.0]
 
 [node name="Background" type="ColorRect" parent="."]
 offset_left = 60.0
+offset_top = 1.0
 offset_right = 1220.0
-offset_bottom = 720.0
-color = Color(0.631035, 0.631035, 0.631035, 1)
+offset_bottom = 721.0
+color = Color(0.631373, 0.631373, 0.631373, 1)
 
-[node name="Lixo" type="ColorRect" parent="."]
-offset_left = 864.0
-offset_top = 640.0
-offset_right = 928.0
-offset_bottom = 720.0
+[node name="Janela" type="ColorRect" parent="."]
+offset_left = 720.0
+offset_top = 240.0
+offset_right = 960.0
+offset_bottom = 480.0
 color = Color(0, 0, 0, 1)
 
-[node name="Cartaz" type="ColorRect" parent="."]
-offset_left = 256.0
-offset_top = 256.0
-offset_right = 512.0
-offset_bottom = 576.0
-color = Color(0, 0, 0, 1)
+[node name="Vassoura" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(44, 500)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 680.0
+offset_top = 240.0
+offset_right = 724.0
+offset_bottom = 740.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.135617, 0.135617, 0.135617, 1)

@@ -24,6 +24,8 @@ func _ready():
 	_down_arrow.hide()
 	room.ceiling_entered.connect(_down_arrow.show)
 	room.ceiling_exited.connect(_down_arrow.hide)
+	room.expansion_entered.connect(_down_arrow.show)
+	room.expansion_exited.connect(_down_arrow.hide)
 
 	_spawn.add_child(room)
 
@@ -68,9 +70,10 @@ func _ready():
 		slots.get_child(index).queue_free())
 
 	Global.game.inventory.focused.connect(func(index: int, enable: bool) -> void:
-		var item: Item = Global.game.inventory.get_item(index)
-		if is_instance_valid(item) and enable:
-			Global.game.message.send(Message.MessageIn.RIGHT, item.title)
+		if enable:
+			var item: Item = Global.game.inventory.get_item(index)
+			if is_instance_valid(item):
+				Global.game.message.send(Message.MessageIn.RIGHT, item.title)
 		slots.get_child(index).focus(enable))
 
 	Global.game.inventory.inserted.connect(func(index: int) -> void:

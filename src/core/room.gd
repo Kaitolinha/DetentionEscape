@@ -3,6 +3,11 @@ extends Node
 
 signal ceiling_entered()
 signal ceiling_exited()
+signal expansion_entered()
+signal expansion_exited()
+
+@export var _sides: Node2D
+@export var _expansions: Node2D
 
 enum Direction {INITIAL, UP, LEFT, RIGHT, DOWN}
 
@@ -11,44 +16,54 @@ var _is_ceiling: bool = false :
 		_is_ceiling = value
 
 		if _is_ceiling:
-			get_child(0).hide()
-			get_child(1).show()
+			_sides.get_child(0).hide()
+			_sides.get_child(1).show()
 			ceiling_entered.emit()
 		else:
-			get_child(0).show()
-			get_child(1).hide()
+			_sides.get_child(0).show()
+			_sides.get_child(1).hide()
 			ceiling_exited.emit()
 
 var _current_side_index: int = 0 :
 	get: return _current_side_index % 4
 	set(value):
-		get_child(0).get_child(_current_side_index).hide()
+		var side = _sides.get_child(0).get_child(_current_side_index)
+		_sides.get_child(0).get_child(_current_side_index).hide()
 		_current_side_index = value
-		get_child(0).get_child(_current_side_index).show()
+		_sides.get_child(0).get_child(_current_side_index).show()
 
 func _ready() -> void:
-	var sides := Node2D.new()
+	var walls := Node2D.new()
 
-	sides.add_child(preload("res://src/sides/front_side.tscn").instantiate())
-	sides.add_child(preload("res://src/sides/right_side.tscn").instantiate())
-	sides.add_child(preload("res://src/sides/back_side.tscn").instantiate())
-	sides.add_child(preload("res://src/sides/left_side.tscn").instantiate())
+	walls.add_child(preload("res://src/sides/front_side.tscn").instantiate())
+	walls.add_child(preload("res://src/sides/right_side.tscn").instantiate())
+	walls.add_child(preload("res://src/sides/back_side.tscn").instantiate())
+	walls.add_child(preload("res://src/sides/left_side.tscn").instantiate())
 
-	for child in sides.get_children():
+	for child in walls.get_children():
 		if child is Side:
 			child.room = self
 			child.hide()
 
-	add_child(sides)
+	_sides.add_child(walls)
 
 	var top_side: Side = preload("res://src/sides/top_side.tscn").instantiate()
 	top_side.room = self
 	top_side.hide()
-	add_child(top_side)
+	_sides.add_child(top_side)
 
 	change(Direction.INITIAL)
 
 func change(direction: Direction) -> void:
+	if _expansions.get_child_count() != 0:
+		var index: int = _expansions.get_child_count() - 1
+		_expansions.get_child(index).queue_free()
+		if index == 0:
+			_sides.show()
+			_expansions.hide()
+			expansion_exited.emit()
+		return
+
 	match direction:
 		Direction.INITIAL:
 			_current_side_index = 0
@@ -63,3 +78,9 @@ func change(direction: Direction) -> void:
 			_is_ceiling = !_is_ceiling
 		Direction.DOWN:
 			if _is_ceiling: _is_ceiling = false
+
+func expand(expansion: Side) -> void:
+	_sides.hide()
+	_expansions.show()
+	_expansions.add_child(expansion)
+	expansion_entered.emit()

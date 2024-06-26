@@ -1,5 +1,7 @@
 class_name Interaction
 extends Node
 
-func interact() -> void:
-	pass
+@export var only_in_state: State
+
+func interact() -> bool:
+	return false

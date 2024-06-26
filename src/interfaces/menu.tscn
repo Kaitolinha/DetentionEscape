@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cv6g6xgst5kub"]
+[gd_scene load_steps=5 format=3 uid="uid://cv6g6xgst5kub"]
 
 [ext_resource type="Script" path="res://src/interfaces/menu.gd" id="1_wt21m"]
+[ext_resource type="PackedScene" uid="uid://cx1gospj35i" path="res://src/core/game.tscn" id="2_v5a7m"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ui4gd"]
 bg_color = Color(0, 0, 0, 0.196078)
@@ -26,6 +27,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_wt21m")
+_game_scene = ExtResource("2_v5a7m")
 _start_button = NodePath("Panel/VBoxContainer/StartButton")
 
 [node name="Panel" type="Panel" parent="."]

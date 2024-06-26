@@ -2,56 +2,45 @@
 
 [ext_resource type="Script" path="res://src/sides/side.gd" id="1_dv22l"]
 [ext_resource type="Script" path="res://src/interacts/state_machine/state_machine.gd" id="2_uoub6"]
-[ext_resource type="Script" path="res://src/interacts/state_machine/state.gd" id="3_g3v2f"]
 [ext_resource type="PackedScene" uid="uid://xoigfh0bg218" path="res://src/interacts/interactable.tscn" id="4_dyyet"]
 [ext_resource type="Script" path="res://src/interacts/actions/take_item_action.gd" id="5_bwnan"]
 [ext_resource type="Resource" uid="uid://dof4mf6ctkx6p" path="res://src/items/key.tres" id="6_5vewf"]
 [ext_resource type="Script" path="res://src/interacts/actions/give_item_action.gd" id="7_5e5ot"]
 [ext_resource type="Script" path="res://src/interacts/state_machine/states/trash_catch.gd" id="8_7i6il"]
 [ext_resource type="Script" path="res://src/interacts/actions/action.gd" id="8_fc66c"]
-[ext_resource type="Script" path="res://src/interacts/state_machine/states/trash_release.gd" id="9_w2mbv"]
+[ext_resource type="Script" path="res://src/interacts/actions/delete_action.gd" id="9_xv1jr"]
+
+[sub_resource type="GDScript" id="GDScript_ycs2g"]
 
 [sub_resource type="Animation" id="Animation_s6c1d"]
 resource_name = "up"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Interactable:position")
-tracks/0/interp = 1
+tracks/0/path = NodePath("Image:position")
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(0.406126, 1),
+"transitions": PackedFloat32Array(0.267944, 1),
 "update": 0,
 "values": [Vector2(980, 620), Vector2(980, 520)]
 }
 
 [sub_resource type="Animation" id="Animation_3qreg"]
 length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Interactable:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(980, 620)]
-}
 
 [sub_resource type="Animation" id="Animation_al10n"]
 resource_name = "down"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Interactable:position")
+tracks/0/path = NodePath("Image:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(0.420448, 1),
+"transitions": PackedFloat32Array(0.31864, 1),
 "update": 0,
 "values": [Vector2(980, 520), Vector2(980, 620)]
 }
@@ -107,10 +96,10 @@ mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="LockedState" type="Node" parent="Door"]
-script = ExtResource("3_g3v2f")
+script = SubResource("GDScript_ycs2g")
 
 [node name="UnlockedState" type="Node" parent="Door"]
-script = ExtResource("3_g3v2f")
+script = SubResource("GDScript_ycs2g")
 
 [node name="Interactable" parent="Door" node_paths=PackedStringArray("_at_state", "_to_state") instance=ExtResource("4_dyyet")]
 offset_right = 240.0
@@ -138,10 +127,10 @@ mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="DirtyState" type="Node" parent="Bin"]
-script = ExtResource("3_g3v2f")
+script = SubResource("GDScript_ycs2g")
 
 [node name="CleanState" type="Node" parent="Bin"]
-script = ExtResource("3_g3v2f")
+script = SubResource("GDScript_ycs2g")
 
 [node name="Interactable2" parent="Bin" node_paths=PackedStringArray("_at_state", "_to_state") instance=ExtResource("4_dyyet")]
 offset_right = 100.0
@@ -173,28 +162,27 @@ libraries = {
 "": SubResource("AnimationLibrary_m18wu")
 }
 
-[node name="ReleaseState" type="Node" parent="Trash" node_paths=PackedStringArray("_animation")]
-script = ExtResource("9_w2mbv")
-_animation = NodePath("../AnimationPlayer")
+[node name="Image" type="ColorRect" parent="Trash"]
+offset_left = 980.0
+offset_top = 620.0
+offset_right = 1160.0
+offset_bottom = 740.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ReleaseState" type="Node" parent="Trash"]
+script = SubResource("GDScript_ycs2g")
 
 [node name="CatchState" type="Node" parent="Trash" node_paths=PackedStringArray("_animation")]
 script = ExtResource("8_7i6il")
 _animation = NodePath("../AnimationPlayer")
 
 [node name="Interactable" parent="Trash" node_paths=PackedStringArray("_at_state", "_to_state") instance=ExtResource("4_dyyet")]
-offset_left = 980.0
-offset_top = 620.0
-offset_right = 1160.0
-offset_bottom = 740.0
+offset_right = 180.0
+offset_bottom = 120.0
 _at_state = NodePath("../ReleaseState")
 _to_state = NodePath("../CatchState")
 
-[node name="Image" type="ColorRect" parent="Trash/Interactable"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
+[node name="DeleteAction" type="Node" parent="Trash/Interactable" node_paths=PackedStringArray("_state_machine")]
+script = ExtResource("9_xv1jr")
+_state_machine = NodePath("../..")

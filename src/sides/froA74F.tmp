@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3 uid="uid://b2bf0kvvde68e"]
+
+[ext_resource type="Script" path="res://src/sides/front_side.gd" id="1_8spov"]
+[ext_resource type="PackedScene" uid="uid://bykd3kd6ewibc" path="res://src/interacts/interactable.tscn" id="2_q8d67"]
+[ext_resource type="Script" path="res://src/interacts/item/give_item_interaction.gd" id="3_vps7p"]
+[ext_resource type="Resource" uid="uid://dof4mf6ctkx6p" path="res://src/items/key.tres" id="4_5i0am"]
+[ext_resource type="Script" path="res://src/interacts/item/take_item_interaction.gd" id="5_13eex"]
+
+[node name="FrontSide" type="Node2D" groups=["Objects"]]
+script = ExtResource("1_8spov")
+metadata/_edit_horizontal_guides_ = [240.0, 480.0, 780.0]
+metadata/_edit_vertical_guides_ = [420.0, 840.0]
+
+[node name="Background2" type="ColorRect" parent="."]
+offset_left = 60.0
+offset_right = 1220.0
+offset_bottom = 720.0
+color = Color(0.631373, 0.631373, 0.631373, 1)
+
+[node name="Porta" type="ColorRect" parent="."]
+offset_left = 300.0
+offset_top = 240.0
+offset_right = 540.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 1)
+
+[node name="Interactable" parent="Porta" instance=ExtResource("2_q8d67")]
+layout_mode = 1
+message = "A porta está trancada."
+
+[node name="GiveItemInteraction" type="Node" parent="Porta/Interactable"]
+script = ExtResource("3_vps7p")
+message = "Achei uma chave nessa porta, wtf."
+item = ExtResource("4_5i0am")
+
+[node name="Cofre" type="ColorRect" parent="."]
+offset_left = 760.0
+offset_top = 480.0
+offset_right = 1000.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 1)
+
+[node name="Interactable" parent="Cofre" instance=ExtResource("2_q8d67")]
+layout_mode = 1
+message = "A porta está trancada."
+
+[node name="TakeItemInteraction" type="Node" parent="Cofre/Interactable"]
+script = ExtResource("5_13eex")
+message_has = "A chave abriu o cofre, oh garapa."
+message_not_has = "Preciso de uma chave para abrir esta porra."
+item = ExtResource("4_5i0am")
