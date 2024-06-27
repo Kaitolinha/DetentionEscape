@@ -1,6 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://x3bcf713rdxs"]
+[gd_scene load_steps=13 format=3 uid="uid://x3bcf713rdxs"]
 
 [ext_resource type="Script" path="res://src/sides/side.gd" id="1_iitjb"]
+[ext_resource type="Script" path="res://src/interacts/object.gd" id="2_xjn0q"]
+[ext_resource type="Script" path="res://src/interacts/state_machine/state_machine.gd" id="3_2xkwj"]
+[ext_resource type="Script" path="res://src/interacts/state_machine/state.gd" id="4_qxuok"]
+[ext_resource type="Script" path="res://src/interacts/state_machine/states/other_action_state.gd" id="5_jh8bg"]
+[ext_resource type="PackedScene" uid="uid://xoigfh0bg218" path="res://src/interacts/interactable.tscn" id="6_eya40"]
+[ext_resource type="Script" path="res://src/interacts/actions/action.gd" id="7_n6u14"]
+[ext_resource type="Script" path="res://src/interacts/actions/take_item_action.gd" id="7_pcbel"]
+[ext_resource type="Resource" uid="uid://cxt2ik42mto5m" path="res://src/items/metal_cabinet_key.tres" id="8_p3cpy"]
+[ext_resource type="Script" path="res://src/interacts/actions/give_item_action.gd" id="10_cl2sk"]
+[ext_resource type="Resource" uid="uid://dit51i5w7j3x1" path="res://src/items/baygon.tres" id="11_ua4jj"]
+[ext_resource type="Resource" uid="uid://bpuey4ffl1jve" path="res://src/items/EPIs.tres" id="11_x5jgm"]
 
 [node name="LeftSide" type="Node2D"]
 script = ExtResource("1_iitjb")
@@ -14,44 +25,102 @@ offset_right = 1220.0
 offset_bottom = 721.0
 color = Color(0.631373, 0.631373, 0.631373, 1)
 
-[node name="ArmárioDeMetal" type="ColorRect" parent="."]
-custom_minimum_size = Vector2(120, 500)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 840.0
-offset_top = 240.0
-offset_right = 960.0
-offset_bottom = 740.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
+[node name="MetalCabinet" type="Node2D" parent="."]
+position = Vector2(780, 240)
+script = ExtResource("2_xjn0q")
+
+[node name="Image" type="ColorRect" parent="MetalCabinet"]
+offset_right = 120.0
+offset_bottom = 500.0
 color = Color(0, 0, 0, 1)
 
-[node name="QuadroEmBranco" type="ColorRect" parent="."]
-custom_minimum_size = Vector2(400, 240)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 240.0
-offset_top = 240.0
-offset_right = 640.0
-offset_bottom = 480.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="StateMachine" type="Node" parent="MetalCabinet" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_2xkwj")
+initial_state = NodePath("ClosedState")
+delete_when_finished = null
+
+[node name="ClosedState" type="Node" parent="MetalCabinet/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
+script = ExtResource("4_qxuok")
+_next = NodePath("../OpenState")
+_interactable = NodePath("../../GoToOpen")
+
+[node name="OpenState" type="Node" parent="MetalCabinet/StateMachine" node_paths=PackedStringArray("other_next", "other_interactable", "_next", "_interactable")]
+script = ExtResource("5_jh8bg")
+other_next = NodePath("../ClosedState")
+other_interactable = NodePath("../../GoToClosed")
+_next = NodePath(".")
+_interactable = NodePath("../../GiveEPIs")
+
+[node name="GoToClosed" parent="MetalCabinet" instance=ExtResource("6_eya40")]
+offset_right = 120.0
+offset_bottom = 500.0
+
+[node name="Action" type="Node" parent="MetalCabinet/GoToClosed"]
+script = ExtResource("7_n6u14")
+delete = false
+
+[node name="GoToOpen" parent="MetalCabinet" instance=ExtResource("6_eya40")]
+offset_right = 120.0
+offset_bottom = 500.0
+
+[node name="TakeItemAction" type="Node" parent="MetalCabinet/GoToOpen"]
+script = ExtResource("7_pcbel")
+_not_has_item = "Preciso de uma chave para abrir."
+item = ExtResource("8_p3cpy")
+
+[node name="Action" type="Node" parent="MetalCabinet/GoToOpen"]
+script = ExtResource("7_n6u14")
+delete = false
+
+[node name="GiveEPIs" parent="MetalCabinet" instance=ExtResource("6_eya40")]
+offset_left = 20.0
+offset_top = 120.0
+offset_right = 100.0
+offset_bottom = 220.0
+delete = true
+
+[node name="Image" type="ColorRect" parent="MetalCabinet/GiveEPIs"]
+layout_mode = 1
+offset_right = 80.0
+offset_bottom = 100.0
 mouse_filter = 2
+color = Color(0.135617, 0.135617, 0.135617, 1)
+
+[node name="GiveItemAction" type="Node" parent="MetalCabinet/GiveEPIs"]
+script = ExtResource("10_cl2sk")
+item = ExtResource("11_x5jgm")
+pause = false
+
+[node name="Table" type="Node2D" parent="."]
+position = Vector2(240, 560)
+
+[node name="Image" type="ColorRect" parent="Table"]
+offset_right = 260.0
+offset_bottom = 180.0
 color = Color(0, 0, 0, 1)
 
-[node name="Iluminaria" type="ColorRect" parent="."]
-custom_minimum_size = Vector2(60, 320)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 220.0
-offset_top = 420.0
-offset_right = 280.0
-offset_bottom = 740.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.116127, 0.116127, 0.116127, 1)
+[node name="Baygon" type="Node2D" parent="."]
+position = Vector2(420, 480)
+script = ExtResource("2_xjn0q")
+
+[node name="Image" type="ColorRect" parent="Baygon"]
+offset_right = 40.0
+offset_bottom = 80.0
+color = Color(0.324203, 0.324203, 0.324203, 1)
+
+[node name="StateMachine" type="Node" parent="Baygon" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_2xkwj")
+initial_state = NodePath("State")
+delete_when_finished = true
+
+[node name="State" type="Node" parent="Baygon/StateMachine" node_paths=PackedStringArray("_interactable")]
+script = ExtResource("4_qxuok")
+_interactable = NodePath("../../Interactable")
+
+[node name="Interactable" parent="Baygon" instance=ExtResource("6_eya40")]
+offset_right = 40.0
+offset_bottom = 80.0
+
+[node name="GiveItemAction" type="Node" parent="Baygon/Interactable"]
+script = ExtResource("10_cl2sk")
+item = ExtResource("11_ua4jj")

@@ -1,6 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://mmd4y1xv0ah"]
+[gd_scene load_steps=14 format=3 uid="uid://mmd4y1xv0ah"]
 
 [ext_resource type="Script" path="res://src/sides/side.gd" id="1_ro1p4"]
+[ext_resource type="Script" path="res://src/interacts/object.gd" id="2_20lf8"]
+[ext_resource type="Script" path="res://src/interacts/state_machine/state_machine.gd" id="3_kq7mv"]
+[ext_resource type="Script" path="res://src/interacts/state_machine/state.gd" id="4_dwqg8"]
+[ext_resource type="PackedScene" uid="uid://xoigfh0bg218" path="res://src/interacts/interactable.tscn" id="5_44djc"]
+[ext_resource type="Script" path="res://src/interacts/state_machine/states/other_action_state.gd" id="5_g8cw2"]
+[ext_resource type="Script" path="res://src/interacts/actions/take_item_action.gd" id="6_umy31"]
+[ext_resource type="Resource" uid="uid://deb6kn44cr0ka" path="res://src/items/fuse.tres" id="7_ov5q3"]
+[ext_resource type="Script" path="res://src/interacts/actions/action.gd" id="8_bbbsv"]
+[ext_resource type="Resource" uid="uid://bpuey4ffl1jve" path="res://src/items/EPIs.tres" id="10_8vt0l"]
+[ext_resource type="Script" path="res://src/interacts/actions/give_item_action.gd" id="10_h1oxk"]
+[ext_resource type="Resource" uid="uid://1u44y3aww2ab" path="res://src/items/broom.tres" id="11_lxpas"]
+[ext_resource type="Resource" uid="uid://b55ynj7ei2q0y" path="res://src/items/insulating_tape.tres" id="12_w7nkh"]
 
 [node name="BackSide" type="Node2D"]
 script = ExtResource("1_ro1p4")
@@ -13,30 +25,149 @@ offset_right = 1220.0
 offset_bottom = 720.0
 color = Color(0.631035, 0.631035, 0.631035, 1)
 
-[node name="ArmárioDeAarquivos" type="ColorRect" parent="."]
-custom_minimum_size = Vector2(240, 260)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 320.0
-offset_top = 480.0
-offset_right = 560.0
-offset_bottom = 740.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
+[node name="Panel" type="Node2D" parent="."]
+position = Vector2(780, 240)
+script = ExtResource("2_20lf8")
+
+[node name="Image" type="ColorRect" parent="Panel"]
+offset_right = 240.0
+offset_bottom = 240.0
 color = Color(0, 0, 0, 1)
 
-[node name="PainelDeEletricidade" type="ColorRect" parent="."]
-custom_minimum_size = Vector2(240, 260)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 800.0
-offset_top = 240.0
-offset_right = 1040.0
-offset_bottom = 500.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
+[node name="StateMachine" type="Node" parent="Panel" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_kq7mv")
+initial_state = NodePath("ClosedState")
+delete_when_finished = null
+
+[node name="ClosedState" type="Node" parent="Panel/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
+script = ExtResource("4_dwqg8")
+_next = NodePath("../OpenState")
+_interactable = NodePath("../../GoToOpen")
+
+[node name="OpenState" type="Node" parent="Panel/StateMachine" node_paths=PackedStringArray("other_next", "other_interactable", "_next", "_interactable")]
+script = ExtResource("5_g8cw2")
+other_next = NodePath("../ClosedState")
+other_interactable = NodePath("../../GoToClosed")
+_next = NodePath(".")
+_interactable = NodePath("../../TakeFuse")
+
+[node name="GoToOpen" parent="Panel" instance=ExtResource("5_44djc")]
+offset_right = 240.0
+offset_bottom = 240.0
+
+[node name="Action" type="Node" parent="Panel/GoToOpen"]
+script = ExtResource("8_bbbsv")
+delete = false
+
+[node name="GoToClosed" parent="Panel" instance=ExtResource("5_44djc")]
+offset_right = 240.0
+offset_bottom = 240.0
+
+[node name="Action" type="Node" parent="Panel/GoToClosed"]
+script = ExtResource("8_bbbsv")
+delete = false
+
+[node name="TakeFuse" parent="Panel" instance=ExtResource("5_44djc")]
+offset_left = 100.0
+offset_top = 60.0
+offset_right = 140.0
+offset_bottom = 180.0
+delete = true
+
+[node name="TakeItemAction" type="Node" parent="Panel/TakeFuse"]
+script = ExtResource("6_umy31")
+_not_has_item = "Preciso colocar um fusível pra ligar a energia."
+item = ExtResource("7_ov5q3")
+pause = false
+
+[node name="KitchenCabinet" type="Node2D" parent="."]
+position = Vector2(240, 480)
+script = ExtResource("2_20lf8")
+
+[node name="Image" type="ColorRect" parent="KitchenCabinet"]
+offset_right = 400.0
+offset_bottom = 260.0
 color = Color(0, 0, 0, 1)
+
+[node name="StateMachine" type="Node" parent="KitchenCabinet" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_kq7mv")
+initial_state = NodePath("CoveredState")
+
+[node name="CoveredState" type="Node" parent="KitchenCabinet/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
+script = ExtResource("4_dwqg8")
+_next = NodePath("../ClosedState")
+_interactable = NodePath("../../GoToOpen")
+
+[node name="ClosedState" type="Node" parent="KitchenCabinet/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
+script = ExtResource("4_dwqg8")
+_next = NodePath("../OpenState")
+_interactable = NodePath("../../GoToOpen")
+
+[node name="OpenState" type="Node" parent="KitchenCabinet/StateMachine" node_paths=PackedStringArray("other_next", "other_interactable", "_next", "_interactable")]
+script = ExtResource("5_g8cw2")
+other_next = NodePath("../ClosedState")
+other_interactable = NodePath("../../GoToClosed")
+_next = NodePath(".")
+_interactable = NodePath("../../GiveInsulatingTape")
+
+[node name="GoToOpen" parent="KitchenCabinet" instance=ExtResource("5_44djc")]
+offset_right = 400.0
+offset_bottom = 200.0
+
+[node name="TakeItemAction" type="Node" parent="KitchenCabinet/GoToOpen"]
+script = ExtResource("6_umy31")
+_not_has_item = "Preciso limpar isso primeiro..."
+item = ExtResource("10_8vt0l")
+
+[node name="Action" type="Node" parent="KitchenCabinet/GoToOpen"]
+script = ExtResource("8_bbbsv")
+delete = false
+
+[node name="GoToClosed" parent="KitchenCabinet" instance=ExtResource("5_44djc")]
+offset_right = 400.0
+offset_bottom = 200.0
+
+[node name="Action" type="Node" parent="KitchenCabinet/GoToClosed"]
+script = ExtResource("8_bbbsv")
+delete = false
+
+[node name="GiveInsulatingTape" parent="KitchenCabinet" instance=ExtResource("5_44djc")]
+offset_right = 400.0
+offset_bottom = 200.0
+delete = true
+
+[node name="GiveItemAction" type="Node" parent="KitchenCabinet/GiveInsulatingTape"]
+script = ExtResource("10_h1oxk")
+item = ExtResource("12_w7nkh")
+
+[node name="Fuse" type="Node2D" parent="."]
+position = Vector2(380, 700)
+script = ExtResource("2_20lf8")
+
+[node name="Image" type="ColorRect" parent="Fuse"]
+offset_right = 120.0
+offset_bottom = 40.0
+color = Color(0.197937, 0.197937, 0.197937, 1)
+
+[node name="StateMachine" type="Node" parent="Fuse" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_kq7mv")
+initial_state = NodePath("State")
+delete_when_finished = true
+
+[node name="State" type="Node" parent="Fuse/StateMachine" node_paths=PackedStringArray("_interactable")]
+script = ExtResource("4_dwqg8")
+_interactable = NodePath("../../Interactable")
+
+[node name="Interactable" parent="Fuse" instance=ExtResource("5_44djc")]
+offset_right = 120.0
+offset_bottom = 40.0
+
+[node name="TakeItemAction" type="Node" parent="Fuse/Interactable"]
+script = ExtResource("6_umy31")
+_not_has_item = "Não consigo alcançar."
+item = ExtResource("11_lxpas")
+pause = false
+
+[node name="GiveItemAction" type="Node" parent="Fuse/Interactable"]
+script = ExtResource("10_h1oxk")
+item = ExtResource("7_ov5q3")

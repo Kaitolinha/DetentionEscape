@@ -6,5 +6,6 @@ extends ItemAction
 
 func act() -> bool:
 	var result: bool = Global.game.inventory.request(item)
-	Global.game.message.send(Message.MessageIn.LEFT, _has_item if result else _not_has_item)
+	Global.game.message.send(Message.MessageIn.LEFT,
+		_has_item if result else _not_has_item)
 	return result

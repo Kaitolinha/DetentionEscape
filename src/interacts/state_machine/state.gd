@@ -1,32 +1,50 @@
-extends Node
 class_name State
+extends Node
 
 @export var _next: State
-@export var _action: Action
-@export var _interactables: Array[Interactable]
+@export var _interactable: Interactable
+var _interactables: Array[Interactable]
 
 signal Transitioned
 var active := false
 
 func _ready() -> void:
-	if is_instance_valid(_action):
-		var interactable = _action.get_parent() as Interactable
-		interactable.pressed.connect(func() -> void:
-			if is_instance_valid(_action):
-				if _action.act():
-					_action.queue_free()
-					Transitioned.emit(self, _next))
+	if is_instance_valid(_interactable):
+		_interactables.append(_interactable)
 
 	for interactable in _interactables:
-			interactable.hide()
+		interactable.hide()
+
+func change(state: State, interactable: Interactable) -> void:
+	for child in interactable.get_children():
+		if child is Action:
+			if child.act():
+				var pause: bool = child.pause
+				if child.delete: child.queue_free()
+				Transitioned.emit(self, state) 
+				if pause: return
+			else: return
+
+	if interactable.delete:
+		interactable.queue_free()
+		_interactables.erase(interactable)
 
 func enter() -> void:
+	if is_instance_valid(_interactable):
+		_interactable.pressed.connect(_on_change)
+
 	for interactable in _interactables:
 		interactable.show()
 
 func exit() -> void:
+	if is_instance_valid(_interactable):
+		_interactable.pressed.disconnect(_on_change)
+
 	for interactable in _interactables:
 		interactable.hide()
 
-func update() -> void: pass
-func physics_update() -> void: pass
+func _on_change() -> void:
+	if is_instance_valid(_interactable):
+		change(_next, _interactable)
+
+func update(_delta: float) -> void: pass

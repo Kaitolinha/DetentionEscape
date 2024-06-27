@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://src/interacts/interactable.gd" id="1_tu6nx"]
 
-[node name="Action" type="Button"]
+[node name="Interactable" type="Button"]
 self_modulate = Color(1, 1, 1, 0)
 offset_right = 8.0
 offset_bottom = 8.0

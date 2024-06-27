@@ -1,9 +1,12 @@
 ## State machine for managing States.
-extends Node
 class_name StateMachine
+extends Node
+
+signal changed(from: State, to: State)
 
 ## State for the StateMachine to start in.
 @export var initial_state : State
+@export var delete_when_finished: bool
 
 var current_state : State
 
@@ -20,13 +23,9 @@ func _ready() -> void:
 	current_state.enter()
 	current_state.active = true
 
-func _process(_delta : float) -> void:
-	if current_state:
-		current_state.update()
-
-func _physics_process(_delta : float) -> void:
-	if current_state:
-		current_state.physics_update()
+func _physics_process(delta: float) -> void:
+	if is_instance_valid(current_state):
+		current_state.update(delta)
 
 func on_state_transitioned(state : State, new_state : State) -> void:
 	if state != current_state:
@@ -41,16 +40,20 @@ func on_state_transitioned(state : State, new_state : State) -> void:
 		print("Received null state, stopping the state machine.")
 		current_state.exit()
 		current_state.active = false
+		changed.emit(current_state, null)
 		current_state = null
+		if delete_when_finished:
+			get_parent().queue_free()
 		return
 
 	if new_state == current_state:
 		print("State is already in the desired state, no transition occurs.")
 		return
-	
+
 	current_state.exit()
 	current_state.active = false
 
 	new_state.enter()
 	new_state.active = true
+	changed.emit(current_state, new_state)
 	current_state = new_state

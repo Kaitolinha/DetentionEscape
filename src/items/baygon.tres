@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Item" load_steps=3 format=3 uid="uid://dit51i5w7j3x1"]
+
+[ext_resource type="Script" path="res://src/items/item.gd" id="1_gktvq"]
+[ext_resource type="Texture2D" uid="uid://ka2qhlnrtnoe" path="res://icon.svg" id="2_o5g56"]
+
+[resource]
+script = ExtResource("1_gktvq")
+title = "Baygon"
+texture = ExtResource("2_o5g56")
