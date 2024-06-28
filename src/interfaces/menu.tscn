@@ -1,14 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://cv6g6xgst5kub"]
+[gd_scene load_steps=9 format=3 uid="uid://cv6g6xgst5kub"]
 
 [ext_resource type="Script" path="res://src/interfaces/menu.gd" id="1_wt21m"]
 [ext_resource type="PackedScene" uid="uid://cx1gospj35i" path="res://src/core/game.tscn" id="2_v5a7m"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ui4gd"]
-bg_color = Color(0, 0, 0, 0.196078)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
+[sub_resource type="Gradient" id="Gradient_skfiu"]
+colors = PackedColorArray(1, 1, 1, 0, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_b5l6h"]
+gradient = SubResource("Gradient_skfiu")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sfp6x"]
 bg_color = Color(0, 0, 0, 1)
@@ -19,6 +18,42 @@ corner_radius_bottom_left = 10
 expand_margin_left = 10.0
 expand_margin_right = 10.0
 
+[sub_resource type="Animation" id="Animation_3i1km"]
+resource_name = "enter"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Transition:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_0ce7t"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Transition:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0rcok"]
+_data = {
+"RESET": SubResource("Animation_0ce7t"),
+"enter": SubResource("Animation_3i1km")
+}
+
 [node name="Menu" type="Control" node_paths=PackedStringArray("_start_button")]
 layout_mode = 3
 anchors_preset = 15
@@ -28,39 +63,47 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_wt21m")
 _game_scene = ExtResource("2_v5a7m")
-_start_button = NodePath("Panel/VBoxContainer/StartButton")
+_start_button = NodePath("Background/StartButton")
+metadata/_edit_vertical_guides_ = [420.0, 860.0]
+metadata/_edit_horizontal_guides_ = [240.0, 480.0]
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Fade" type="TextureRect" parent="."]
+layout_mode = 2
+anchor_right = 0.328
+anchor_bottom = 1.0
+offset_right = 1.15997
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+texture = SubResource("GradientTexture2D_b5l6h")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 2
+anchor_left = 0.329
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -0.120026
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.03
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -360.0
-offset_top = -250.0
-offset_right = 360.0
-offset_bottom = 250.0
+offset_left = -370.5
+offset_top = -220.0
+offset_right = 380.5
+offset_bottom = 13.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_ui4gd")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -39.5
-offset_top = -29.0
-offset_right = 39.5
-offset_bottom = 29.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 15
-
-[node name="GroupName" type="Label" parent="Panel/VBoxContainer"]
+[node name="GroupName" type="Label" parent="Background/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 30
@@ -69,21 +112,50 @@ text = "Primeiro B Tarde"
 horizontal_alignment = 1
 uppercase = true
 
-[node name="Present" type="Label" parent="Panel/VBoxContainer"]
+[node name="Present" type="Label" parent="Background/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "apresenta"
 horizontal_alignment = 1
 
-[node name="NameGame" type="Label" parent="Panel/VBoxContainer"]
+[node name="NameGame" type="Label" parent="Background/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 45
-text = "Eco Escape: Risco ambiental"
+text = "Detention Escape:
+Risco ambiental"
+horizontal_alignment = 1
 vertical_alignment = 1
+uppercase = true
 
-[node name="StartButton" type="Button" parent="Panel/VBoxContainer"]
-layout_mode = 2
+[node name="StartButton" type="Button" parent="Background"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -130.5
+offset_top = 60.0
+offset_right = 5.5
+offset_bottom = 110.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 30
 text = "Começar"
+
+[node name="Transition" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_0rcok")
+}

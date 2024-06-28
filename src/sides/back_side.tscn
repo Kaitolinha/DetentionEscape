@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://mmd4y1xv0ah"]
+[gd_scene load_steps=21 format=3 uid="uid://mmd4y1xv0ah"]
 
 [ext_resource type="Script" path="res://src/sides/side.gd" id="1_ro1p4"]
 [ext_resource type="Script" path="res://src/interacts/object.gd" id="2_20lf8"]
+[ext_resource type="Texture2D" uid="uid://cng101pt6b55k" path="res://assets/images/panel.png" id="3_ifb4m"]
 [ext_resource type="Script" path="res://src/interacts/state_machine/state_machine.gd" id="3_kq7mv"]
 [ext_resource type="Script" path="res://src/interacts/state_machine/state.gd" id="4_dwqg8"]
 [ext_resource type="PackedScene" uid="uid://xoigfh0bg218" path="res://src/interacts/interactable.tscn" id="5_44djc"]
@@ -9,68 +10,85 @@
 [ext_resource type="Script" path="res://src/interacts/actions/take_item_action.gd" id="6_umy31"]
 [ext_resource type="Resource" uid="uid://deb6kn44cr0ka" path="res://src/items/fuse.tres" id="7_ov5q3"]
 [ext_resource type="Script" path="res://src/interacts/actions/action.gd" id="8_bbbsv"]
-[ext_resource type="Resource" uid="uid://bpuey4ffl1jve" path="res://src/items/EPIs.tres" id="10_8vt0l"]
+[ext_resource type="Script" path="res://src/interacts/actions/panel_energy_action.gd" id="10_7n0vp"]
 [ext_resource type="Script" path="res://src/interacts/actions/give_item_action.gd" id="10_h1oxk"]
 [ext_resource type="Resource" uid="uid://1u44y3aww2ab" path="res://src/items/broom.tres" id="11_lxpas"]
+[ext_resource type="Texture2D" uid="uid://b4nlphqypje28" path="res://assets/images/fuse.png" id="12_62m5a"]
 [ext_resource type="Resource" uid="uid://b55ynj7ei2q0y" path="res://src/items/insulating_tape.tres" id="12_w7nkh"]
+[ext_resource type="Texture2D" uid="uid://lhstaifwhhrc" path="res://assets/images/kitchen_cabinet.png" id="12_xuk7f"]
+[ext_resource type="Resource" uid="uid://bpuey4ffl1jve" path="res://src/items/chemical_glove.tres" id="16_dr8yl"]
+[ext_resource type="Texture2D" uid="uid://lkvkfr2qwtmu" path="res://assets/images/insulating_tape.png" id="18_8aicl"]
+
+[sub_resource type="Gradient" id="Gradient_pbxgs"]
+offsets = PackedFloat32Array(0, 0.52381, 1)
+colors = PackedColorArray(0.309804, 0.380392, 0.286275, 1, 0.360784, 0.411765, 0.301961, 1, 0.309804, 0.380392, 0.286275, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_838go"]
+gradient = SubResource("Gradient_pbxgs")
 
 [node name="BackSide" type="Node2D"]
 script = ExtResource("1_ro1p4")
 metadata/_edit_vertical_guides_ = [440.0, 840.0]
 metadata/_edit_horizontal_guides_ = [240.0, 480.0, 780.0]
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background2" type="ColorRect" parent="."]
+offset_right = 60.0
+offset_bottom = 780.0
+color = Color(0.360784, 0.411765, 0.301961, 1)
+
+[node name="Background3" type="ColorRect" parent="."]
+offset_left = 1220.0
+offset_right = 1280.0
+offset_bottom = 780.0
+color = Color(0.360784, 0.411765, 0.301961, 1)
+
+[node name="TextureRect" type="TextureRect" parent="."]
 offset_left = 60.0
 offset_right = 1220.0
 offset_bottom = 720.0
-color = Color(0.631035, 0.631035, 0.631035, 1)
+texture = SubResource("GradientTexture2D_838go")
 
-[node name="Panel" type="Node2D" parent="."]
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.456819, 0.456802, 0.446084, 1)
+polygon = PackedVector2Array(0, 780, 60, 720, 1220, 720, 1280, 780)
+
+[node name="Panel" type="Node2D" parent="." node_paths=PackedStringArray("frames")]
 position = Vector2(780, 240)
 script = ExtResource("2_20lf8")
+frames = [NodePath("StateMachine/ClosedState"), NodePath("StateMachine/OpenState")]
 
-[node name="Image" type="ColorRect" parent="Panel"]
-offset_right = 240.0
-offset_bottom = 240.0
-color = Color(0, 0, 0, 1)
+[node name="Sprite" type="Sprite2D" parent="Panel"]
+position = Vector2(-200, 0)
+texture = ExtResource("3_ifb4m")
+centered = false
+hframes = 2
 
 [node name="StateMachine" type="Node" parent="Panel" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_kq7mv")
 initial_state = NodePath("ClosedState")
-delete_when_finished = null
 
 [node name="ClosedState" type="Node" parent="Panel/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
 script = ExtResource("4_dwqg8")
 _next = NodePath("../OpenState")
 _interactable = NodePath("../../GoToOpen")
 
-[node name="OpenState" type="Node" parent="Panel/StateMachine" node_paths=PackedStringArray("other_next", "other_interactable", "_next", "_interactable")]
-script = ExtResource("5_g8cw2")
-other_next = NodePath("../ClosedState")
-other_interactable = NodePath("../../GoToClosed")
-_next = NodePath(".")
+[node name="OpenState" type="Node" parent="Panel/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
+script = ExtResource("4_dwqg8")
+_next = NodePath("../ClosedState")
 _interactable = NodePath("../../TakeFuse")
 
 [node name="GoToOpen" parent="Panel" instance=ExtResource("5_44djc")]
 offset_right = 240.0
 offset_bottom = 240.0
+delete = true
 
 [node name="Action" type="Node" parent="Panel/GoToOpen"]
 script = ExtResource("8_bbbsv")
-delete = false
-
-[node name="GoToClosed" parent="Panel" instance=ExtResource("5_44djc")]
-offset_right = 240.0
-offset_bottom = 240.0
-
-[node name="Action" type="Node" parent="Panel/GoToClosed"]
-script = ExtResource("8_bbbsv")
-delete = false
 
 [node name="TakeFuse" parent="Panel" instance=ExtResource("5_44djc")]
-offset_left = 100.0
-offset_top = 60.0
-offset_right = 140.0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 220.0
 offset_bottom = 180.0
 delete = true
 
@@ -80,14 +98,52 @@ _not_has_item = "Preciso colocar um fusível pra ligar a energia."
 item = ExtResource("7_ov5q3")
 pause = false
 
-[node name="KitchenCabinet" type="Node2D" parent="."]
-position = Vector2(240, 480)
+[node name="EnergyAction" type="Node" parent="Panel/TakeFuse"]
+script = ExtResource("10_7n0vp")
+
+[node name="Fuse" type="Node2D" parent="."]
+modulate = Color(0.399428, 0.399428, 0.399428, 1)
+position = Vector2(420, 700)
+scale = Vector2(0.85, 0.85)
 script = ExtResource("2_20lf8")
 
-[node name="Image" type="ColorRect" parent="KitchenCabinet"]
-offset_right = 400.0
-offset_bottom = 260.0
-color = Color(0, 0, 0, 1)
+[node name="Sprite" type="Sprite2D" parent="Fuse"]
+texture = ExtResource("12_62m5a")
+centered = false
+
+[node name="StateMachine" type="Node" parent="Fuse" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_kq7mv")
+initial_state = NodePath("State")
+delete_when_finished = true
+
+[node name="State" type="Node" parent="Fuse/StateMachine" node_paths=PackedStringArray("_interactable")]
+script = ExtResource("4_dwqg8")
+_interactable = NodePath("../../Interactable")
+
+[node name="Interactable" parent="Fuse" instance=ExtResource("5_44djc")]
+offset_right = 120.0
+offset_bottom = 40.0
+
+[node name="TakeItemAction" type="Node" parent="Fuse/Interactable"]
+script = ExtResource("6_umy31")
+_not_has_item = "Não consigo alcançar."
+item = ExtResource("11_lxpas")
+pause = false
+
+[node name="GiveItemAction" type="Node" parent="Fuse/Interactable"]
+script = ExtResource("10_h1oxk")
+item = ExtResource("7_ov5q3")
+
+[node name="KitchenCabinet" type="Node2D" parent="." node_paths=PackedStringArray("frames")]
+position = Vector2(240, 480)
+script = ExtResource("2_20lf8")
+frames = [NodePath("StateMachine/CoveredState"), NodePath("StateMachine/ClosedState"), NodePath("StateMachine/OpenState")]
+
+[node name="Sprite" type="Sprite2D" parent="KitchenCabinet"]
+position = Vector2(-220, 0)
+texture = ExtResource("12_xuk7f")
+centered = false
+hframes = 3
 
 [node name="StateMachine" type="Node" parent="KitchenCabinet" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_kq7mv")
@@ -117,7 +173,7 @@ offset_bottom = 200.0
 [node name="TakeItemAction" type="Node" parent="KitchenCabinet/GoToOpen"]
 script = ExtResource("6_umy31")
 _not_has_item = "Preciso limpar isso primeiro..."
-item = ExtResource("10_8vt0l")
+item = ExtResource("16_dr8yl")
 
 [node name="Action" type="Node" parent="KitchenCabinet/GoToOpen"]
 script = ExtResource("8_bbbsv")
@@ -132,42 +188,18 @@ script = ExtResource("8_bbbsv")
 delete = false
 
 [node name="GiveInsulatingTape" parent="KitchenCabinet" instance=ExtResource("5_44djc")]
-offset_right = 400.0
-offset_bottom = 200.0
+offset_left = 60.0
+offset_top = 60.0
+offset_right = 120.0
+offset_bottom = 120.0
 delete = true
 
 [node name="GiveItemAction" type="Node" parent="KitchenCabinet/GiveInsulatingTape"]
 script = ExtResource("10_h1oxk")
 item = ExtResource("12_w7nkh")
-
-[node name="Fuse" type="Node2D" parent="."]
-position = Vector2(380, 700)
-script = ExtResource("2_20lf8")
-
-[node name="Image" type="ColorRect" parent="Fuse"]
-offset_right = 120.0
-offset_bottom = 40.0
-color = Color(0.197937, 0.197937, 0.197937, 1)
-
-[node name="StateMachine" type="Node" parent="Fuse" node_paths=PackedStringArray("initial_state")]
-script = ExtResource("3_kq7mv")
-initial_state = NodePath("State")
-delete_when_finished = true
-
-[node name="State" type="Node" parent="Fuse/StateMachine" node_paths=PackedStringArray("_interactable")]
-script = ExtResource("4_dwqg8")
-_interactable = NodePath("../../Interactable")
-
-[node name="Interactable" parent="Fuse" instance=ExtResource("5_44djc")]
-offset_right = 120.0
-offset_bottom = 40.0
-
-[node name="TakeItemAction" type="Node" parent="Fuse/Interactable"]
-script = ExtResource("6_umy31")
-_not_has_item = "Não consigo alcançar."
-item = ExtResource("11_lxpas")
 pause = false
 
-[node name="GiveItemAction" type="Node" parent="Fuse/Interactable"]
-script = ExtResource("10_h1oxk")
-item = ExtResource("7_ov5q3")
+[node name="Sprite2D" type="Sprite2D" parent="KitchenCabinet/GiveInsulatingTape"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("18_8aicl")
+centered = false

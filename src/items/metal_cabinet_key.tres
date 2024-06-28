@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="Item" load_steps=3 format=3 uid="uid://cxt2ik42mto5m"]
 
 [ext_resource type="Script" path="res://src/items/item.gd" id="1_phdui"]
-[ext_resource type="Texture2D" uid="uid://ka2qhlnrtnoe" path="res://icon.svg" id="2_ukhdt"]
+[ext_resource type="Texture2D" uid="uid://da3nfnoo1ov2c" path="res://assets/images/metal_cabinet_key.png" id="2_c1vit"]
 
 [resource]
 script = ExtResource("1_phdui")
 title = "Chave do armário de metal"
-texture = ExtResource("2_ukhdt")
+texture = ExtResource("2_c1vit")

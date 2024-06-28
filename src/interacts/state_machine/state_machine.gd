@@ -28,16 +28,10 @@ func _physics_process(delta: float) -> void:
 		current_state.update(delta)
 
 func on_state_transitioned(state : State, new_state : State) -> void:
-	if state != current_state:
-		printerr("Cannot change state from a non-active state")
-		return
-	
-	if !current_state:
-		printerr("Current state is null, cannot transition")
-		return
+	if state != current_state: return
+	if !current_state: return
 	
 	if !is_instance_valid(new_state):
-		print("Received null state, stopping the state machine.")
 		current_state.exit()
 		current_state.active = false
 		changed.emit(current_state, null)
@@ -46,9 +40,7 @@ func on_state_transitioned(state : State, new_state : State) -> void:
 			get_parent().queue_free()
 		return
 
-	if new_state == current_state:
-		print("State is already in the desired state, no transition occurs.")
-		return
+	if new_state == current_state: return
 
 	current_state.exit()
 	current_state.active = false

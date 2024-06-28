@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Item" load_steps=3 format=3 uid="uid://cnym1tlk3jrom"]
+
+[ext_resource type="Script" path="res://src/items/item.gd" id="1_uay6k"]
+[ext_resource type="Texture2D" uid="uid://j3cqcpe5abu6" path="res://assets/images/role_of_code.png" id="2_bc2cq"]
+
+[resource]
+script = ExtResource("1_uay6k")
+title = "Papel com código"
+texture = ExtResource("2_bc2cq")

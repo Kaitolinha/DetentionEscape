@@ -1,42 +1,92 @@
-[gd_scene load_steps=9 format=3 uid="uid://q3ttt6agf7p5"]
+[gd_scene load_steps=16 format=3 uid="uid://q3ttt6agf7p5"]
 
-[ext_resource type="Script" path="res://src/sides/side.gd" id="1_25jxc"]
+[ext_resource type="Script" path="res://src/sides/right_side.gd" id="1_ltt21"]
 [ext_resource type="Script" path="res://src/interacts/object.gd" id="2_3sen7"]
 [ext_resource type="Script" path="res://src/interacts/state_machine/state_machine.gd" id="3_3va4o"]
 [ext_resource type="PackedScene" uid="uid://xoigfh0bg218" path="res://src/interacts/interactable.tscn" id="3_bonxt"]
+[ext_resource type="Texture2D" uid="uid://j3cqcpe5abu6" path="res://assets/images/role_of_code.png" id="3_rupg0"]
 [ext_resource type="Script" path="res://src/interacts/actions/give_item_action.gd" id="4_1d7t8"]
 [ext_resource type="Script" path="res://src/interacts/state_machine/state.gd" id="4_wxwol"]
+[ext_resource type="Resource" uid="uid://cnym1tlk3jrom" path="res://src/items/role_of_code.tres" id="7_acucd"]
 [ext_resource type="Resource" uid="uid://1u44y3aww2ab" path="res://src/items/broom.tres" id="7_dnoae"]
 [ext_resource type="Resource" uid="uid://c27wps2ftgob2" path="res://src/items/dustpan.tres" id="8_h76xt"]
+[ext_resource type="Texture2D" uid="uid://oia21lscca3k" path="res://assets/images/window.png" id="8_sy852"]
+[ext_resource type="Texture2D" uid="uid://dspgjwk4rx5u7" path="res://assets/images/broom.png" id="10_3eag0"]
+[ext_resource type="Texture2D" uid="uid://b2m8o67ng0kq2" path="res://assets/images/dustpan.png" id="12_8uo5a"]
+
+[sub_resource type="Gradient" id="Gradient_l8408"]
+offsets = PackedFloat32Array(0, 0.52381, 1)
+colors = PackedColorArray(0.309804, 0.380392, 0.286275, 1, 0.360784, 0.411765, 0.301961, 1, 0.309804, 0.380392, 0.286275, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0yau4"]
+gradient = SubResource("Gradient_l8408")
 
 [node name="RightSide" type="Node2D"]
-script = ExtResource("1_25jxc")
+script = ExtResource("1_ltt21")
 metadata/_edit_vertical_guides_ = [840.0, 440.0]
 metadata/_edit_horizontal_guides_ = [240.0, 480.0, 780.0]
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background2" type="ColorRect" parent="."]
+offset_right = 60.0
+offset_bottom = 780.0
+color = Color(0.360784, 0.411765, 0.301961, 1)
+
+[node name="Background3" type="ColorRect" parent="."]
+offset_left = 1220.0
+offset_right = 1280.0
+offset_bottom = 780.0
+color = Color(0.360784, 0.411765, 0.301961, 1)
+
+[node name="TextureRect" type="TextureRect" parent="."]
 offset_left = 60.0
-offset_top = 1.0
 offset_right = 1220.0
-offset_bottom = 721.0
-color = Color(0.631373, 0.631373, 0.631373, 1)
+offset_bottom = 720.0
+texture = SubResource("GradientTexture2D_0yau4")
 
-[node name="Window" type="Node2D" parent="."]
-position = Vector2(720, 240)
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.456819, 0.456802, 0.446084, 1)
+polygon = PackedVector2Array(0, 780, 60, 720, 1220, 720, 1280, 780)
 
-[node name="Image" type="ColorRect" parent="Window"]
-offset_right = 240.0
-offset_bottom = 240.0
-color = Color(0, 0, 0, 1)
-
-[node name="Broom" type="Node2D" parent="."]
-position = Vector2(680, 240)
+[node name="RoleOfCode" type="Node2D" parent="."]
+position = Vector2(300, 721)
 script = ExtResource("2_3sen7")
 
-[node name="Image" type="ColorRect" parent="Broom"]
-offset_right = 40.0
-offset_bottom = 500.0
-color = Color(0.197937, 0.197937, 0.197937, 1)
+[node name="Sprite" type="Sprite2D" parent="RoleOfCode"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_rupg0")
+centered = false
+
+[node name="StateMachine" type="Node" parent="RoleOfCode" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_3va4o")
+initial_state = NodePath("State")
+delete_when_finished = true
+
+[node name="State" type="Node" parent="RoleOfCode/StateMachine" node_paths=PackedStringArray("_interactable")]
+script = ExtResource("4_wxwol")
+_interactable = NodePath("../../Interactable")
+
+[node name="Interactable" parent="RoleOfCode" instance=ExtResource("3_bonxt")]
+offset_right = 60.0
+offset_bottom = 21.0
+
+[node name="GiveItemAction" type="Node" parent="RoleOfCode/Interactable"]
+script = ExtResource("4_1d7t8")
+item = ExtResource("7_acucd")
+
+[node name="Window" type="Sprite2D" parent="."]
+position = Vector2(720, 240)
+texture = ExtResource("8_sy852")
+centered = false
+
+[node name="Broom" type="Node2D" parent="."]
+position = Vector2(600, 320)
+script = ExtResource("2_3sen7")
+
+[node name="Sprite" type="Sprite2D" parent="Broom"]
+position = Vector2(66, 0)
+rotation = 0.298451
+texture = ExtResource("10_3eag0")
+centered = false
 
 [node name="StateMachine" type="Node" parent="Broom" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_3va4o")
@@ -48,21 +98,21 @@ script = ExtResource("4_wxwol")
 _interactable = NodePath("../../Interactable")
 
 [node name="Interactable" parent="Broom" instance=ExtResource("3_bonxt")]
-offset_right = 40.0
-offset_bottom = 500.0
+offset_left = -62.0
+offset_right = 120.0
+offset_bottom = 454.0
 
 [node name="GiveItemAction" type="Node" parent="Broom/Interactable"]
 script = ExtResource("4_1d7t8")
 item = ExtResource("7_dnoae")
 
 [node name="Dustpan" type="Node2D" parent="."]
-position = Vector2(880, 440)
+position = Vector2(862, 460)
 script = ExtResource("2_3sen7")
 
-[node name="Image" type="ColorRect" parent="Dustpan"]
-offset_right = 40.0
-offset_bottom = 100.0
-color = Color(0.197937, 0.197937, 0.197937, 1)
+[node name="Sprite" type="Sprite2D" parent="Dustpan"]
+texture = ExtResource("12_8uo5a")
+centered = false
 
 [node name="StateMachine" type="Node" parent="Dustpan" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_3va4o")
@@ -74,8 +124,8 @@ script = ExtResource("4_wxwol")
 _interactable = NodePath("../../Interactable")
 
 [node name="Interactable" parent="Dustpan" instance=ExtResource("3_bonxt")]
-offset_right = 40.0
-offset_bottom = 100.0
+offset_right = 101.0
+offset_bottom = 146.0
 
 [node name="GiveItemAction" type="Node" parent="Dustpan/Interactable"]
 script = ExtResource("4_1d7t8")

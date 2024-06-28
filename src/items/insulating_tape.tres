@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="Item" load_steps=3 format=3 uid="uid://b55ynj7ei2q0y"]
 
 [ext_resource type="Script" path="res://src/items/item.gd" id="1_gvpqf"]
-[ext_resource type="Texture2D" uid="uid://ka2qhlnrtnoe" path="res://icon.svg" id="2_72m1v"]
+[ext_resource type="Texture2D" uid="uid://lkvkfr2qwtmu" path="res://assets/images/insulating_tape.png" id="2_2dr84"]
 
 [resource]
 script = ExtResource("1_gvpqf")
 title = "Fita isolante"
-texture = ExtResource("2_72m1v")
+texture = ExtResource("2_2dr84")

@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="Item" load_steps=3 format=3 uid="uid://c27wps2ftgob2"]
 
 [ext_resource type="Script" path="res://src/items/item.gd" id="1_wfmgt"]
-[ext_resource type="Texture2D" uid="uid://ka2qhlnrtnoe" path="res://icon.svg" id="2_2s0p3"]
+[ext_resource type="Texture2D" uid="uid://b2m8o67ng0kq2" path="res://assets/images/dustpan.png" id="2_xcyn6"]
 
 [resource]
 script = ExtResource("1_wfmgt")
 title = "Pá de lixo"
-texture = ExtResource("2_2s0p3")
+texture = ExtResource("2_xcyn6")

@@ -1,27 +1,42 @@
-[gd_scene load_steps=20 format=3 uid="uid://b2bf0kvvde68e"]
+[gd_scene load_steps=30 format=3 uid="uid://b2bf0kvvde68e"]
 
-[ext_resource type="Script" path="res://src/sides/side.gd" id="1_dv22l"]
+[ext_resource type="Script" path="res://src/sides/front_side.gd" id="1_vayap"]
 [ext_resource type="Script" path="res://src/interacts/object.gd" id="2_gax7l"]
 [ext_resource type="Script" path="res://src/interacts/state_machine/state_machine.gd" id="2_uoub6"]
 [ext_resource type="Script" path="res://src/interacts/state_machine/state.gd" id="3_g3v2f"]
+[ext_resource type="Texture2D" uid="uid://4j6r07ansco7" path="res://assets/images/door.png" id="3_jkmxt"]
 [ext_resource type="PackedScene" uid="uid://xoigfh0bg218" path="res://src/interacts/interactable.tscn" id="4_dyyet"]
 [ext_resource type="Script" path="res://src/interacts/actions/take_item_action.gd" id="5_bwnan"]
-[ext_resource type="Resource" uid="uid://dof4mf6ctkx6p" path="res://src/items/key.tres" id="6_5vewf"]
 [ext_resource type="Script" path="res://src/interacts/actions/give_item_action.gd" id="7_5e5ot"]
+[ext_resource type="Resource" uid="uid://cnym1tlk3jrom" path="res://src/items/role_of_code.tres" id="7_7f50w"]
+[ext_resource type="Script" path="res://src/interacts/actions/scene_action.gd" id="8_ewte4"]
 [ext_resource type="Script" path="res://src/interacts/actions/action.gd" id="8_fc66c"]
 [ext_resource type="Resource" uid="uid://b55ynj7ei2q0y" path="res://src/items/insulating_tape.tres" id="8_m3q5s"]
 [ext_resource type="Script" path="res://src/interacts/animation.gd" id="9_81sja"]
 [ext_resource type="Resource" uid="uid://cxt2ik42mto5m" path="res://src/items/metal_cabinet_key.tres" id="9_fgr1s"]
+[ext_resource type="Script" path="res://src/interacts/actions/outlet_energy_action.gd" id="10_0lrd1"]
+[ext_resource type="PackedScene" uid="uid://wxnjojqffx4q" path="res://src/interfaces/end.tscn" id="10_4ar6w"]
+[ext_resource type="Texture2D" uid="uid://dv435xcr7yf8x" path="res://assets/images/outlet.png" id="10_33fse"]
 [ext_resource type="Script" path="res://src/interacts/state_machine/states/other_action_state.gd" id="10_g6fy2"]
 [ext_resource type="Resource" uid="uid://dit51i5w7j3x1" path="res://src/items/baygon.tres" id="10_ofi8j"]
 [ext_resource type="Resource" uid="uid://c27wps2ftgob2" path="res://src/items/dustpan.tres" id="11_8oan2"]
+[ext_resource type="Texture2D" uid="uid://g3igwwc3kc0e" path="res://assets/images/bin.png" id="12_gycgh"]
+[ext_resource type="Texture2D" uid="uid://dg0u677gx28ve" path="res://assets/images/scorpion.png" id="13_fxe3w"]
+[ext_resource type="Texture2D" uid="uid://bd11dvkx004iy" path="res://assets/images/trash.png" id="17_g4tsw"]
+
+[sub_resource type="Gradient" id="Gradient_d5144"]
+offsets = PackedFloat32Array(0, 0.52381, 1)
+colors = PackedColorArray(0.309804, 0.380392, 0.286275, 1, 0.360784, 0.411765, 0.301961, 1, 0.309804, 0.380392, 0.286275, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_qfxt5"]
+gradient = SubResource("Gradient_d5144")
 
 [sub_resource type="Animation" id="Animation_gitcb"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Image:position")
+tracks/0/path = NodePath("Sprite:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -37,12 +52,12 @@ length = 0.6
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Image:position")
+tracks/0/path = NodePath("Sprite:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.6),
-"transitions": PackedFloat32Array(0.420448, 1),
+"transitions": PackedFloat32Array(0.353553, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(0, -100)]
 }
@@ -53,12 +68,12 @@ length = 0.6
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Image:position")
+tracks/0/path = NodePath("Sprite:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.6),
-"transitions": PackedFloat32Array(0.392292, 1),
+"transitions": PackedFloat32Array(0.267943, 1),
 "update": 0,
 "values": [Vector2(0, -100), Vector2(0, 0)]
 }
@@ -70,62 +85,83 @@ _data = {
 "release": SubResource("Animation_fo6ra")
 }
 
-[node name="FrontSide" type="Node2D"]
-script = ExtResource("1_dv22l")
+[node name="FrontSide" type="Node2D" node_paths=PackedStringArray("state")]
+script = ExtResource("1_vayap")
+state = NodePath("Outlet/StateMachine/OnState")
 metadata/_edit_horizontal_guides_ = [240.0, 480.0, 780.0]
 metadata/_edit_vertical_guides_ = [420.0, 840.0]
 
 [node name="Background" type="ColorRect" parent="."]
+offset_right = 60.0
+offset_bottom = 780.0
+color = Color(0.360784, 0.411765, 0.301961, 1)
+
+[node name="Background2" type="ColorRect" parent="."]
+offset_left = 1220.0
+offset_right = 1280.0
+offset_bottom = 780.0
+color = Color(0.360784, 0.411765, 0.301961, 1)
+
+[node name="TextureRect" type="TextureRect" parent="."]
 offset_left = 60.0
 offset_right = 1220.0
 offset_bottom = 720.0
-color = Color(0.631373, 0.631373, 0.631373, 1)
+texture = SubResource("GradientTexture2D_qfxt5")
 
-[node name="Door" type="Node2D" parent="."]
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.456819, 0.456802, 0.446084, 1)
+polygon = PackedVector2Array(0, 780, 60, 720, 1220, 720, 1280, 780)
+
+[node name="Door" type="Node2D" parent="." node_paths=PackedStringArray("frames")]
 position = Vector2(300, 240)
 script = ExtResource("2_gax7l")
+frames = [NodePath("StateMachine/LockedState"), NodePath("StateMachine/UnlockedState")]
 
-[node name="Image" type="ColorRect" parent="Door"]
-custom_minimum_size = Vector2(240, 480)
-offset_right = 240.0
-offset_bottom = 480.0
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
+[node name="Sprite" type="Sprite2D" parent="Door"]
+position = Vector2(-200, 0)
+texture = ExtResource("3_jkmxt")
+centered = false
+hframes = 2
 
 [node name="StateMachine" type="Node" parent="Door" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("2_uoub6")
 initial_state = NodePath("LockedState")
-delete_when_finished = null
 
 [node name="LockedState" type="Node" parent="Door/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
 script = ExtResource("3_g3v2f")
 _next = NodePath("../UnlockedState")
-_interactable = NodePath("../../TakeKey")
+_interactable = NodePath("../../Interactable")
 
-[node name="UnlockedState" type="Node" parent="Door/StateMachine" node_paths=PackedStringArray("_next")]
+[node name="UnlockedState" type="Node" parent="Door/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
 script = ExtResource("3_g3v2f")
 _next = NodePath(".")
+_interactable = NodePath("../../Interactable")
 
-[node name="TakeKey" parent="Door" instance=ExtResource("4_dyyet")]
+[node name="Interactable" parent="Door" instance=ExtResource("4_dyyet")]
 offset_right = 240.0
 offset_bottom = 480.0
 delete = true
 
-[node name="TakeItemAction" type="Node" parent="Door/TakeKey"]
+[node name="TakeItemAction" type="Node" parent="Door/Interactable"]
 script = ExtResource("5_bwnan")
-_not_has_item = "A porta está trancada."
+_not_has_item = "Trancado. Tenho que colocar um código."
 _has_item = "Consegui abrir!"
-item = ExtResource("6_5vewf")
+item = ExtResource("7_7f50w")
 
-[node name="Outlet" type="Node2D" parent="."]
+[node name="SceneAction" type="Node" parent="Door/Interactable"]
+script = ExtResource("8_ewte4")
+scene = ExtResource("10_4ar6w")
+
+[node name="Outlet" type="Node2D" parent="." node_paths=PackedStringArray("frames")]
 position = Vector2(600, 420)
 script = ExtResource("2_gax7l")
+frames = [NodePath("StateMachine/FixedState"), NodePath("StateMachine/BrokenState")]
 
-[node name="Image" type="ColorRect" parent="Outlet"]
-offset_right = 40.0
-offset_bottom = 60.0
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
+[node name="Sprite" type="Sprite2D" parent="Outlet"]
+texture = ExtResource("10_33fse")
+centered = false
+hframes = 2
+frame = 1
 
 [node name="StateMachine" type="Node" parent="Outlet" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("2_uoub6")
@@ -136,9 +172,14 @@ script = ExtResource("3_g3v2f")
 _next = NodePath("../FixedState")
 _interactable = NodePath("../../TakeInsulatingTape")
 
-[node name="FixedState" type="Node" parent="Outlet/StateMachine" node_paths=PackedStringArray("_next")]
+[node name="FixedState" type="Node" parent="Outlet/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
 script = ExtResource("3_g3v2f")
-_next = NodePath("../../../Door/StateMachine/UnlockedState")
+_next = NodePath("../OnState")
+_interactable = NodePath("../../TakeInsulatingTape")
+
+[node name="OnState" type="Node" parent="Outlet/StateMachine" node_paths=PackedStringArray("_next")]
+script = ExtResource("3_g3v2f")
+_next = NodePath(".")
 
 [node name="TakeInsulatingTape" parent="Outlet" instance=ExtResource("4_dyyet")]
 offset_right = 40.0
@@ -147,25 +188,25 @@ delete = true
 
 [node name="TakeItemAction" type="Node" parent="Outlet/TakeInsulatingTape"]
 script = ExtResource("5_bwnan")
-_not_has_item = "O cabo está descascado."
-_has_item = "Agora eu consigo ligar o ventilador."
+_not_has_item = "O cabo está descascado, posso levar um choque."
 item = ExtResource("8_m3q5s")
 
-[node name="Bin" type="Node2D" parent="."]
-position = Vector2(840, 560)
-script = ExtResource("2_gax7l")
+[node name="EletricityAction" type="Node" parent="Outlet/TakeInsulatingTape"]
+script = ExtResource("10_0lrd1")
 
-[node name="Image" type="ColorRect" parent="Bin"]
-custom_minimum_size = Vector2(100, 180)
-offset_right = 100.0
-offset_bottom = 180.0
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
+[node name="Bin" type="Node2D" parent="." node_paths=PackedStringArray("frames")]
+position = Vector2(780, 520)
+script = ExtResource("2_gax7l")
+frames = [NodePath("StateMachine/DirtyState"), NodePath("StateMachine/CleanState")]
+
+[node name="Sprite" type="Sprite2D" parent="Bin"]
+texture = ExtResource("12_gycgh")
+centered = false
+hframes = 2
 
 [node name="StateMachine" type="Node" parent="Bin" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("2_uoub6")
 initial_state = NodePath("DirtyState")
-delete_when_finished = null
 
 [node name="DirtyState" type="Node" parent="Bin/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
 script = ExtResource("3_g3v2f")
@@ -176,14 +217,15 @@ _interactable = NodePath("../../../Trash/GoToClean")
 script = ExtResource("3_g3v2f")
 _next = NodePath(".")
 
-[node name="Scorpion" type="Node2D" parent="."]
-position = Vector2(1060, 700)
+[node name="Scorpion" type="Node2D" parent="." node_paths=PackedStringArray("frames")]
+position = Vector2(1020, 680)
 script = ExtResource("2_gax7l")
+frames = [NodePath("StateMachine/LiveState"), NodePath("StateMachine/DeadState"), NodePath("StateMachine/OnBinState")]
 
-[node name="Image" type="ColorRect" parent="Scorpion"]
-offset_right = 40.0
-offset_bottom = 40.0
-color = Color(0.150075, 0.150075, 0.150075, 1)
+[node name="Sprite" type="Sprite2D" parent="Scorpion"]
+texture = ExtResource("13_fxe3w")
+centered = false
+hframes = 3
 
 [node name="StateMachine" type="Node" parent="Scorpion" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("2_uoub6")
@@ -205,8 +247,8 @@ script = ExtResource("3_g3v2f")
 _interactable = NodePath("../../Interactable")
 
 [node name="Interactable" parent="Scorpion" instance=ExtResource("4_dyyet")]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 60.0
+offset_bottom = 80.0
 
 [node name="TakeBaygonAction" type="Node" parent="Scorpion/Interactable"]
 script = ExtResource("5_bwnan")
@@ -223,19 +265,12 @@ script = ExtResource("7_5e5ot")
 item = ExtResource("9_fgr1s")
 
 [node name="Trash" type="Node2D" parent="."]
-position = Vector2(980, 620)
+position = Vector2(940, 640)
 script = ExtResource("2_gax7l")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Trash"]
-libraries = {
-"": SubResource("AnimationLibrary_irhco")
-}
-
-[node name="Image" type="ColorRect" parent="Trash" node_paths=PackedStringArray("animator", "state")]
-offset_right = 200.0
-offset_bottom = 120.0
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
+[node name="Sprite" type="Sprite2D" parent="Trash" node_paths=PackedStringArray("animator", "state")]
+texture = ExtResource("17_g4tsw")
+centered = false
 script = ExtResource("9_81sja")
 animator = NodePath("../AnimationPlayer")
 enter_animation = "catch"
@@ -285,3 +320,8 @@ offset_bottom = 120.0
 [node name="Action" type="Node" parent="Trash/GoToClean"]
 script = ExtResource("8_fc66c")
 delete = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Trash"]
+libraries = {
+"": SubResource("AnimationLibrary_irhco")
+}

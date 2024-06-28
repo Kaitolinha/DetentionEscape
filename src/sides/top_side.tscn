@@ -1,20 +1,77 @@
-[gd_scene load_steps=2 format=3 uid="uid://b6jdovaf0fqgl"]
+[gd_scene load_steps=9 format=3 uid="uid://b6jdovaf0fqgl"]
 
-[ext_resource type="Script" path="res://src/sides/side.gd" id="1_87ncb"]
+[ext_resource type="Script" path="res://src/sides/top_side.gd" id="1_igl4r"]
+[ext_resource type="Texture2D" uid="uid://gsrk7kprwlms" path="res://assets/images/fan.png" id="2_1nkbw"]
+[ext_resource type="Texture2D" uid="uid://j3cqcpe5abu6" path="res://assets/images/role_of_code.png" id="2_oh2bg"]
+[ext_resource type="Script" path="res://src/interacts/state_machine/state_machine.gd" id="2_wu4av"]
+[ext_resource type="Script" path="res://src/interacts/state_machine/state.gd" id="3_e5bh0"]
+[ext_resource type="Script" path="res://src/interacts/state_machine/states/fan_on_state.gd" id="4_hinqy"]
+[ext_resource type="PackedScene" uid="uid://xoigfh0bg218" path="res://src/interacts/interactable.tscn" id="4_t7jn7"]
+[ext_resource type="Script" path="res://src/interacts/actions/message_action.gd" id="5_x7m4k"]
 
 [node name="TopSide" type="Node2D"]
-script = ExtResource("1_87ncb")
+script = ExtResource("1_igl4r")
+metadata/_edit_horizontal_guides_ = [780.0]
 
 [node name="Background" type="ColorRect" parent="."]
-offset_left = 60.0
-offset_right = 1220.0
-offset_bottom = 720.0
-color = Color(0.631373, 0.631373, 0.631373, 1)
+offset_right = 1280.0
+offset_bottom = 780.0
+color = Color(0.360784, 0.411765, 0.301961, 1)
 
-[node name="Ventilador" type="ColorRect" parent="."]
-offset_left = 480.0
-offset_top = 180.0
-offset_right = 800.0
-offset_bottom = 500.0
-pivot_offset = Vector2(160, 160)
-color = Color(0, 0, 0, 1)
+[node name="Fan" type="Node2D" parent="."]
+position = Vector2(640, 320)
+
+[node name="RoleOfCode" type="Sprite2D" parent="Fan"]
+position = Vector2(21, -126)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_oh2bg")
+hframes = 2
+frame = 1
+
+[node name="FanBase" type="Sprite2D" parent="Fan"]
+texture = ExtResource("2_1nkbw")
+hframes = 2
+frame = 1
+
+[node name="Fan" type="Sprite2D" parent="Fan"]
+position = Vector2(0, 16)
+texture = ExtResource("2_1nkbw")
+offset = Vector2(0, -16)
+hframes = 2
+
+[node name="StateMachine" type="Node" parent="Fan" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_wu4av")
+initial_state = NodePath("OffState")
+
+[node name="OffState" type="Node" parent="Fan/StateMachine" node_paths=PackedStringArray("_next", "_interactable")]
+script = ExtResource("3_e5bh0")
+_next = NodePath(".")
+_interactable = NodePath("../../OffMessage")
+
+[node name="OnState" type="Node" parent="Fan/StateMachine" node_paths=PackedStringArray("image", "role_of_code_image", "_next", "_interactable")]
+script = ExtResource("4_hinqy")
+image = NodePath("../../Fan")
+role_of_code_image = NodePath("../../RoleOfCode")
+_next = NodePath(".")
+_interactable = NodePath("../../OnMessage")
+
+[node name="OffMessage" parent="Fan" instance=ExtResource("4_t7jn7")]
+offset_left = -180.0
+offset_top = -180.0
+offset_right = 180.0
+offset_bottom = 180.0
+
+[node name="OffMessageAction" type="Node" parent="Fan/OffMessage"]
+script = ExtResource("5_x7m4k")
+message = "Não consigo alcançar."
+
+[node name="OnMessage" parent="Fan" instance=ExtResource("4_t7jn7")]
+offset_left = -640.0
+offset_top = -320.0
+offset_right = 640.0
+offset_bottom = 460.0
+
+[node name="OnMessageAction" type="Node" parent="Fan/OnMessage"]
+script = ExtResource("5_x7m4k")
+message = "Acho que caiu alguma coisa do ventilador."
+delete = false

@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="Item" load_steps=3 format=3 uid="uid://deb6kn44cr0ka"]
 
 [ext_resource type="Script" path="res://src/items/item.gd" id="1_w2y03"]
-[ext_resource type="Texture2D" uid="uid://ka2qhlnrtnoe" path="res://icon.svg" id="2_kwnbw"]
+[ext_resource type="Texture2D" uid="uid://b4nlphqypje28" path="res://assets/images/fuse.png" id="2_ov100"]
 
 [resource]
 script = ExtResource("1_w2y03")
 title = "Fusível"
-texture = ExtResource("2_kwnbw")
+texture = ExtResource("2_ov100")

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Item" load_steps=3 format=3 uid="uid://bpuey4ffl1jve"]
+
+[ext_resource type="Script" path="res://src/items/item.gd" id="1_eanuq"]
+[ext_resource type="Texture2D" uid="uid://djthlkdv14als" path="res://assets/images/chemical_glove.png" id="2_e03s5"]
+
+[resource]
+script = ExtResource("1_eanuq")
+title = "luvas químicas"
+texture = ExtResource("2_e03s5")
